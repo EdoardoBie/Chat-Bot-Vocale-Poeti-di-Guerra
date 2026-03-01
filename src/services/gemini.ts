@@ -1,6 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+let ai: GoogleGenAI | null = null;
+let chatSession: any = null;
 
 const SYSTEM_INSTRUCTION = `You are an expert literary assistant specializing in the lives and works of two great modernist poets: Chen Jingrong (Chinese) and Anna Akhmatova (Russian).
 You possess comprehensive knowledge of their biographies, historical contexts, poetic themes, and specific poems.
@@ -9,23 +10,35 @@ You can compare their styles, discuss their struggles during tumultuous historic
 Reply in a natural, informative, and conversational tone (not roleplaying as the poets).
 If the user asks in Italian, reply in Italian. If in English, reply in English.`;
 
-let chatSession: any = null;
+function getChatSession() {
+  if (chatSession) return chatSession;
 
-export async function generateTextResponse(userMessage: string): Promise<string> {
-  if (!chatSession) {
-    chatSession = ai.chats.create({
-      model: "gemini-3-flash-preview",
-      config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
-      },
-    });
+  const apiKey = process.env.GEMINI_API_KEY || '';
+  if (!apiKey) {
+    throw new Error("API key is missing. Please set GEMINI_API_KEY in your .env file.");
   }
 
+  if (!ai) {
+    ai = new GoogleGenAI({ apiKey });
+  }
+
+  chatSession = ai.chats.create({
+    model: "gemini-1.5-flash",
+    config: {
+      systemInstruction: SYSTEM_INSTRUCTION,
+    },
+  });
+
+  return chatSession;
+}
+
+export async function generateTextResponse(userMessage: string): Promise<string> {
   try {
-    const response = await chatSession.sendMessage({ message: userMessage });
+    const session = getChatSession();
+    const response = await session.sendMessage({ message: userMessage });
     return response.text || "I apologize, I cannot answer that right now.";
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error generating text:", error);
-    return "I encountered an error while processing your request.";
+    return `Error: ${error.message || "I encountered an error while processing your request."}`;
   }
 }

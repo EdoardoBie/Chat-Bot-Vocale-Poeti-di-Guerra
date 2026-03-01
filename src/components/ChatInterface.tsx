@@ -14,7 +14,7 @@ export default function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
-  
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const isSendingRef = useRef(false);
 
@@ -30,19 +30,19 @@ export default function ChatInterface() {
     isSendingRef.current = true;
     const userMessage = inputText;
     const userMsgId = generateId();
-    
+
     setInputText('');
     setIsProcessing(true);
-    
+
     setMessages(prev => [...prev, { id: userMsgId, role: 'user', text: userMessage }]);
 
     try {
       const botText = await generateTextResponse(userMessage);
       const botMsgId = generateId();
-      
+
       // Turn off processing BEFORE adding the message to ensure clean transition
       setIsProcessing(false);
-      
+
       // Small delay to allow state to settle if needed, but usually not necessary with React batching
       // However, to strictly enforce "loading gone -> message appears", we update state.
       setMessages(prev => [...prev, { id: botMsgId, role: 'bot', text: botText }]);
@@ -59,7 +59,7 @@ export default function ChatInterface() {
 
   return (
     <div className="flex flex-col h-screen bg-slate-950 text-slate-200 font-sans overflow-hidden relative selection:bg-slate-700 selection:text-white">
-      
+
       {/* Background Texture */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
       <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900/50 to-slate-950 pointer-events-none"></div>
@@ -81,14 +81,14 @@ export default function ChatInterface() {
       <main className="flex-1 overflow-y-auto pt-24 pb-32 px-6 md:px-12 scroll-smooth scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
         <div className="max-w-3xl mx-auto space-y-12">
           {messages.length === 0 && (
-            <motion.div 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               transition={{ duration: 1 }}
               className="h-[60vh] flex flex-col items-center justify-center text-center space-y-8"
             >
               <div className="w-24 h-24 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center shadow-2xl shadow-black/50">
-                 <Sparkles size={32} className="text-slate-500 opacity-50" />
+                <Sparkles size={32} className="text-slate-500 opacity-50" />
               </div>
               <div className="space-y-4 max-w-lg">
                 <h2 className="font-serif text-3xl md:text-5xl text-slate-200 leading-tight">
@@ -100,7 +100,7 @@ export default function ChatInterface() {
               </div>
             </motion.div>
           )}
-          
+
           <AnimatePresence mode="wait">
             {messages.map((msg) => (
               <motion.div
@@ -127,17 +127,17 @@ export default function ChatInterface() {
                     <div className="prose prose-invert prose-lg max-w-none font-serif text-slate-200 leading-loose">
                       <ReactMarkdown
                         components={{
-                          p: ({node, ...props}) => <p className="mb-6 text-slate-300 font-light" {...props} />,
-                          h1: ({node, ...props}) => <h1 className="text-2xl font-medium text-white mt-8 mb-4 tracking-tight" {...props} />,
-                          h2: ({node, ...props}) => <h2 className="text-xl font-medium text-white mt-8 mb-4 tracking-tight" {...props} />,
-                          h3: ({node, ...props}) => <h3 className="text-lg font-medium text-slate-200 mt-6 mb-3" {...props} />,
-                          blockquote: ({node, ...props}) => <blockquote className="border-l-2 border-slate-600 pl-6 my-8 italic text-slate-400 font-light text-xl" {...props} />,
-                          ul: ({node, ...props}) => <ul className="list-disc list-outside ml-6 mb-6 space-y-2 text-slate-300" {...props} />,
-                          ol: ({node, ...props}) => <ol className="list-decimal list-outside ml-6 mb-6 space-y-2 text-slate-300" {...props} />,
-                          li: ({node, ...props}) => <li className="pl-2" {...props} />,
-                          code: ({node, ...props}) => <code className="bg-slate-900 px-1.5 py-0.5 rounded text-sm font-mono text-slate-400 border border-slate-800" {...props} />,
-                          strong: ({node, ...props}) => <strong className="font-semibold text-white" {...props} />,
-                          em: ({node, ...props}) => <em className="italic text-slate-200" {...props} />,
+                          p: ({ node, ...props }) => <p className="mb-6 text-slate-300 font-light" {...props} />,
+                          h1: ({ node, ...props }) => <h1 className="text-2xl font-medium text-white mt-8 mb-4 tracking-tight" {...props} />,
+                          h2: ({ node, ...props }) => <h2 className="text-xl font-medium text-white mt-8 mb-4 tracking-tight" {...props} />,
+                          h3: ({ node, ...props }) => <h3 className="text-lg font-medium text-slate-200 mt-6 mb-3" {...props} />,
+                          blockquote: ({ node, ...props }) => <blockquote className="border-l-2 border-slate-600 pl-6 my-8 italic text-slate-400 font-light text-xl" {...props} />,
+                          ul: ({ node, ...props }) => <ul className="list-disc list-outside ml-6 mb-6 space-y-2 text-slate-300" {...props} />,
+                          ol: ({ node, ...props }) => <ol className="list-decimal list-outside ml-6 mb-6 space-y-2 text-slate-300" {...props} />,
+                          li: ({ node, ...props }) => <li className="pl-2" {...props} />,
+                          code: ({ node, ...props }) => <code className="bg-slate-900 px-1.5 py-0.5 rounded text-sm font-mono text-slate-400 border border-slate-800" {...props} />,
+                          strong: ({ node, ...props }) => <strong className="font-semibold text-white" {...props} />,
+                          em: ({ node, ...props }) => <em className="italic text-slate-200" {...props} />,
                         }}
                       >
                         {msg.text}
@@ -147,7 +147,7 @@ export default function ChatInterface() {
                 )}
               </motion.div>
             ))}
-            
+
             {isProcessing && (
               <motion.div
                 key="loading"
@@ -159,18 +159,18 @@ export default function ChatInterface() {
               >
                 <div className="flex flex-col items-center gap-3">
                   <div className="flex items-center gap-1.5">
-                    <motion.div 
-                      animate={{ height: [4, 16, 4] }} 
+                    <motion.div
+                      animate={{ height: [4, 16, 4] }}
                       transition={{ duration: 1, repeat: Infinity, ease: "easeInOut", delay: 0 }}
                       className="w-0.5 bg-slate-500"
                     />
-                    <motion.div 
-                      animate={{ height: [4, 24, 4] }} 
+                    <motion.div
+                      animate={{ height: [4, 24, 4] }}
                       transition={{ duration: 1, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
                       className="w-0.5 bg-slate-400"
                     />
-                    <motion.div 
-                      animate={{ height: [4, 16, 4] }} 
+                    <motion.div
+                      animate={{ height: [4, 16, 4] }}
                       transition={{ duration: 1, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
                       className="w-0.5 bg-slate-500"
                     />
@@ -198,7 +198,7 @@ export default function ChatInterface() {
               disabled={isProcessing}
               autoFocus
             />
-            
+
             <button
               onClick={handleSend}
               disabled={!inputText.trim() || isProcessing}
@@ -208,7 +208,7 @@ export default function ChatInterface() {
             </button>
           </div>
           <div className="text-center mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-             <p className="font-mono text-[10px] text-slate-700 uppercase tracking-[0.2em]">Biestro Edoardo, Dourka Rayan, Forlani Giorgio, Khabir Anouar, Jendoubi Francesco</p>
+            <p className="font-mono text-[10px] text-slate-700 uppercase tracking-[0.2em]">Biestro Edoardo, Dourka Rayan, Forlani Giorgio, Khabir Anouar, Jendoubi Francesco</p>
           </div>
         </div>
       </footer>
