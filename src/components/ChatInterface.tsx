@@ -208,7 +208,7 @@ export default function ChatInterface() {
             </button>
           </div>
           <div className="text-center mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-             <p className="font-mono text-[10px] text-slate-700 uppercase tracking-[0.2em]">Powered by Gemini AI</p>
+             <p className="font-mono text-[10px] text-slate-700 uppercase tracking-[0.2em]">Biestro Edoardo, Dourka Rayan, Forlani Giorgio, Khabir Anouar, Jendoubi Francesco</p>
           </div>
         </div>
       </footer>
